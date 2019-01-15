@@ -39,7 +39,7 @@ module.exports = {
   // Define a new wifi network. Expects the network name and password
   // in the environment variables SSID and PSK.
   //defineNetwork: 'ID=`wpa_cli -iwlan0 add_network` && wpa_cli -iwlan0 set_network $ID ssid \\"$SSID\\" && wpa_cli -iwlan0 set_network $ID psk \\"$PSK\\" && wpa_cli -iwlan0 enable_network $ID && wpa_cli -iwlan0 save_config',
-  defineNetwork: 'sudo nmcli dev wifi con \\"$SSID\\" password \\"$PSK\\"',
+  defineNetwork: 'sudo nmcli dev wifi con "$SSID" password "$PSK"',
   // Define a new open wifi network. Expects the network name
   // in the environment variable SSID.
   defineOpenNetwork: 'ID=`wpa_cli -iwlan0 add_network` && wpa_cli -iwlan0 set_network $ID ssid \\"$SSID\\" && wpa_cli -iwlan0 set_network $ID key_mgmt NONE && wpa_cli -iwlan0 enable_network $ID && wpa_cli -iwlan0 save_config',
