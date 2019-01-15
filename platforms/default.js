@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   platform: "default",
 
@@ -19,19 +21,7 @@ module.exports = {
 
   // A shell command that scans for wifi networks and outputs the ssids in
   // order from best signal to worst signal, omitting hidden networks
-  scan: `iwlist wlan0 scan |\
-sed -n -e '
-  /Quality=/,/ESSID:/H
-  /ESSID:/{
-    g
-    s/^.*Quality=\\([0-9]\\+\\).*ESSID:"\\([^"]*\\)".*$/\\1\t\\2/
-    p
-    s/.*//
-    x
-  }' |\
-sort -nr |\
-cut -f 2 |\
-sed -e '/^$/d;/\\x00/d'`,
+  scan: 'sudo python3.6 ' + path.join(__dirname, 'scan.py'),
 
   // A shell command that lists the names of known wifi networks, one
   // to a line.
@@ -48,8 +38,8 @@ sed -e '/^$/d;/\\x00/d'`,
 
   // Define a new wifi network. Expects the network name and password
   // in the environment variables SSID and PSK.
-  defineNetwork: 'ID=`wpa_cli -iwlan0 add_network` && wpa_cli -iwlan0 set_network $ID ssid \\"$SSID\\" && wpa_cli -iwlan0 set_network $ID psk \\"$PSK\\" && wpa_cli -iwlan0 enable_network $ID && wpa_cli -iwlan0 save_config',
-
+  //defineNetwork: 'ID=`wpa_cli -iwlan0 add_network` && wpa_cli -iwlan0 set_network $ID ssid \\"$SSID\\" && wpa_cli -iwlan0 set_network $ID psk \\"$PSK\\" && wpa_cli -iwlan0 enable_network $ID && wpa_cli -iwlan0 save_config',
+  defineNetwork: 'sudo nmcli dev wifi con \\"$SSID\\" password \\"$PSK\\"',
   // Define a new open wifi network. Expects the network name
   // in the environment variable SSID.
   defineOpenNetwork: 'ID=`wpa_cli -iwlan0 add_network` && wpa_cli -iwlan0 set_network $ID ssid \\"$SSID\\" && wpa_cli -iwlan0 set_network $ID key_mgmt NONE && wpa_cli -iwlan0 enable_network $ID && wpa_cli -iwlan0 save_config',
